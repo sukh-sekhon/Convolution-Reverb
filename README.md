@@ -1,11 +1,13 @@
 # Convolution Reverb Processing 
-[![forthebadge](https://forthebadge.com/images/badges/made-with-C-Plus-Plus.svg)](/Convolution-Reverb/blob/master/Reverb.cpp)
+[![forthebadge](https://forthebadge.com/images/badges/made-with-C-Plus-Plus.svg)](Reverb.cpp)
 
 ## What is Convolution Reverb?
 Convolution reverb is used in audio signal processing to simulate reverberations from different environments. By using an impulse response from a specific environment, any audio signal can be transformed to sound as if it was recorded there.
 
 ## Demo
-[![forthebadge](https://forthebadge.com/images/badges/open-source.svg)](./tree/master/Audio%20Files)
+Try the the demo files.
+
+[![forthebadge](https://forthebadge.com/images/badges/check-it-out.svg)](./Audio%20Files/)
 
 ## Usage
 To use the most optimized version:
