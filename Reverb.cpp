@@ -211,11 +211,13 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
     auto start = chrono::high_resolution_clock::now();
     double maxOutput = 0;
     double minOutput = 0;
+    double currOutput;
     for (int i = 0; i < P*2; i+=2) {
-        if (output[i] < minOutput)
-            minOutput = output[i];
-        else if (output[i] > maxOutput)
-            maxOutput = output[i];
+        currOutput = output[i];
+        if (currOutput < minOutput)
+            minOutput = currOutput;
+        else if (currOutput > maxOutput)
+            maxOutput = currOutput;
     }
     double maxAbsOutput = max(maxOutput, abs(minOutput));
     /* Discard any imaginary components */
@@ -223,7 +225,8 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
         y[i/2] = output[i] / maxAbsOutput;
     auto finish = chrono::high_resolution_clock::now();
     chrono::duration<double> elapsed = finish - start;
-    cout << "Partially optimized timing for optimization 7b: " << elapsed.count() << " seconds" << endl;
+    cout << "Fully optimized timing for optimization 7c: " << elapsed.count() << " seconds" << endl;
+
     return y;
 }
 
