@@ -209,17 +209,21 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
     cout << "Scaling Data" << endl;
     /* Find maximum absolute output value */
     auto start = chrono::high_resolution_clock::now();
-    double maxAbsOutput = 0;
-    for (int i = 0; i < P*2; i ++)
-        if (abs(output[i]) > maxAbsOutput)
-            maxAbsOutput = abs(output[i]);
+    double maxOutput = 0;
+    double minOutput = 0;
+    for (int i = 0; i < P*2; i+=2) {
+        if (output[i] < minOutput)
+            minOutput = output[i];
+        else if (output[i] > maxOutput)
+            maxOutput = output[i];
+    }
+    double maxAbsOutput = max(maxOutput, abs(minOutput));
     /* Discard any imaginary components */
     for (int i = 0; i < P*2; i+=2)
         y[i/2] = output[i] / maxAbsOutput;
     auto finish = chrono::high_resolution_clock::now();
     chrono::duration<double> elapsed = finish - start;
-    cout << "Partially optimized timing for optimization 7a: " << elapsed.count() << " seconds" << endl;
-
+    cout << "Partially optimized timing for optimization 7b: " << elapsed.count() << " seconds" << endl;
     return y;
 }
 
