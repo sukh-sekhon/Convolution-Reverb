@@ -1,4 +1,4 @@
-# Convolution Reverb Processing Optimization 
+# Convolution Reverb Processing
 [![forthebadge](https://forthebadge.com/images/badges/made-with-C-Plus-Plus.svg)](https://forthebadge.com)
 
 ## What is Convolution Reverb?
