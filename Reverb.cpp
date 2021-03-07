@@ -172,16 +172,22 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
 
     /* Size of padded array ((value^2)*2 s.t. value = max(N, M))*/
     auto start = chrono::high_resolution_clock::now();
-    int arrayLength = pow(2, ceil(log(max(N, M))/log(2))) * 2;
+    unsigned int arrLen = max(N, M) - 1;
+    arrLen |= arrLen>>1;
+    arrLen |= arrLen>>2;
+    arrLen |= arrLen>>4;
+    arrLen |= arrLen>>8;
+    arrLen |= arrLen>>16;
+    arrLen = (arrLen + 1) << 1;
     auto finish = chrono::high_resolution_clock::now();
     chrono::duration<double> elapsed = finish - start;
-    cout << "Unoptimized timing for optimization 3: " << elapsed.count() << " seconds" << endl;
+    cout << "Optimized timing for optimization 3: " << elapsed.count() << " seconds" << endl;
 
 
     /* Initialize arrays to undergo FFT to 0 (sets the imaginary component) */
-    auto *input = new double[arrayLength] {};
-    auto *impulse = new double[arrayLength] {};
-    auto *output = new double[arrayLength] {};
+    auto *input = new double[arrLen] {};
+    auto *impulse = new double[arrLen] {};
+    auto *output = new double[arrLen] {};
 
     /* Set the real components and perform FFT */
     for (int i = 0; i < N; i++)
@@ -189,21 +195,21 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
     for (int i = 0; i < M; i++)
         impulse[i*2] = h[i];
 
-    four1(input - 1, arrayLength / 2);
-    four1(impulse - 1, arrayLength / 2);
+    four1(input - 1, arrLen / 2);
+    four1(impulse - 1, arrLen / 2);
 
     /* (a,b)*(c,d) = (ac-bd, ad+bc) = (real output, complex output) where:
      *      a is the real component of input
      *      b is the complex component of input
      *      c is the real component of impulse
      *      d is the complex component of input */
-    for (int i = 0; i < arrayLength; i+=2) {
+    for (int i = 0; i < arrLen; i+=2) {
         output[i] = input[i] * impulse[i] - input[i+1] * impulse[i+1];
         output[i+1] = input[i+1] * impulse[i] + input[i] * impulse[i+1];
     }
 
     /* Performs inverse DFT to get the output values */
-    four1(output - 1, arrayLength / 2);
+    four1(output - 1, arrLen / 2);
 
     /* Discard any imaginary components */
     for (int i = 0; i < P*2; i+=2)
@@ -236,9 +242,9 @@ void four1(double data[], int nn) {
         j += m;
     }
 
-    auto start = chrono::high_resolution_clock::now();
     mmax = 2;
     unsigned short counter = 0;
+    auto start = chrono::high_resolution_clock::now();
     while (n > mmax) {
         istep = mmax << 1;
 
@@ -281,10 +287,11 @@ void four1(double data[], int nn) {
         mmax = istep;
         counter += 2;
     }
-    cacheType++;
     auto finish = chrono::high_resolution_clock::now();
     chrono::duration<double> elapsed = finish - start;
-    cout << "Optimized timing for optimization 2: " << elapsed.count() << " seconds" << endl;
+    cout << "Unoptimized timing for optimization 4: " << elapsed.count() << " seconds" << endl;
+
+    cacheType++;
 }
 
 
