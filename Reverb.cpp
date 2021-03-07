@@ -5,6 +5,10 @@
 #include <iostream>
 #include <chrono>
 
+#define PI         3.141592653589793
+#define TWO_PI     (2.0 * PI)
+#define SWAP(a,b)  tempr=(a);(a)=(b);(b)=tempr
+
 using namespace std;
 
 typedef struct {
@@ -34,7 +38,7 @@ typedef struct {
 Wave* readFile(Wave* wave, char *fileName);
 double* convolve(double x[], int N, double h[], int M, double y[], int P);
 void writeFile(char *outputFileName, double *output, int outputSampleRate, int outputLength);
-
+void four1(double data[], int nn, int isign);
 
 /**
  * Convolves input and impulse response .wav files into an output .wav file
@@ -69,7 +73,7 @@ int main (int argc, char *argv[]) {
             output, outputSize);
     auto finish = chrono::high_resolution_clock::now();
     chrono::duration<double> elapsed = finish - start;
-    cout << "Unoptimized timing for optimization 1: " << elapsed.count() << " seconds" << endl;
+    cout << "Optimized timing for optimization 1: " << elapsed.count() << " seconds" << endl;
 
     cout << "Scaling Data" << endl;
     /* Find maximum absolute output value */
@@ -163,26 +167,97 @@ Wave* readFile(Wave* wave, char *fileName) {
  *              output signal
  */
 double* convolve(double* x, int N, double* h, int M, double* y, int P) {
-    int n, m;
     y = (double *) malloc (sizeof(double) * P);
 
-    /*  Make sure the output buffer is the right size: P = N + M - 1  */
-    if (P != (N + M - 1)) {
-        cout << "Invalid output signal size. Aborting Convolution." << endl;
-        return y;
+    /* Size of padded array ((value^2)*2 s.t. value = max(N, M))*/
+    int arrayLength = pow(2, ceil(log(max(N, M))/log(2))) * 2;
+
+    /* Initialize arrays to undergo FFT to 0 (sets the imaginary component) */
+    auto *input = new double[arrayLength] {};
+    auto *impulse = new double[arrayLength] {};
+    auto *output = new double[arrayLength] {};
+
+    /* Set the real components and perform FFT */
+    for (int i = 0; i < N; i++)
+        input[i*2] = x[i];
+    for (int i = 0; i < M; i++)
+        impulse[i*2] = h[i];
+
+    four1(input - 1, arrayLength / 2, 1);
+    four1(impulse - 1, arrayLength / 2, 1);
+
+    /* (a,b)*(c,d) = (ac-bd, ad+bc) = (real output, complex output) where:
+     *      a is the real component of input
+     *      b is the complex component of input
+     *      c is the real component of impulse
+     *      d is the complex component of input */
+    for (int i = 0; i < arrayLength; i+=2) {
+        output[i] = input[i] * impulse[i] - input[i+1] * impulse[i+1];
+        output[i+1] = input[i+1] * impulse[i] + input[i] * impulse[i+1];
     }
 
-    /*  Clear the output buffer y[] to all zero values  */
-    for (n = 0; n < P; n++)
-        y[n] = 0.0;
+    /* Performs inverse DFT to get the output values */
+    four1(output - 1, arrayLength / 2, -1);
 
-    /*  Outer loop:  process each input value x[n] in turn
-        Inner loop:  process x[n] with each sample of h[]  */
-    for (n = 0; n < N; n++)
-        for (m = 0; m < M; m++)
-            y[n + m] += x[n] * h[m];
+    /* Discard any imaginary components */
+    for (int i = 0; i < P*2; i+=2)
+        y[i/2] = output[i];
 
     return y;
+}
+
+/**
+ * Adopted from Numerical Recipes in C: The Art of Scientific Computing (pages 507,508)
+ */
+void four1(double data[], int nn, int isign) {
+    unsigned long n, mmax, m, j, istep, i;
+    double wtemp, wr, wpr, wpi, wi, theta;
+    double tempr, tempi;
+
+    n = nn << 1;
+    j = 1;
+
+    for (i = 1; i < n; i += 2) {
+        if (j > i) {
+            SWAP(data[j], data[i]);
+            SWAP(data[j+1], data[i+1]);
+        }
+        m = nn;
+        while (m >= 2 && j > m) {
+            j -= m;
+            m >>= 1;
+        }
+        j += m;
+    }
+
+    auto start = chrono::high_resolution_clock::now();
+    mmax = 2;
+    while (n > mmax) {
+        istep = mmax << 1;
+        theta = isign * (TWO_PI / mmax);
+        wtemp = sin(0.5 * theta);
+        wpr = -2.0 * wtemp * wtemp;
+        wpi = sin(theta);
+        wr = 1.0;
+        wi = 0.0;
+        for (m = 1; m < mmax; m += 2) {
+            for (i = m; i <= n; i += istep) {
+                j = i + mmax;
+                tempr = wr * data[j] - wi * data[j+1];
+                tempi = wr * data[j+1] + wi * data[j];
+                data[j] = data[i] - tempr;
+                data[j+1] = data[i+1] - tempi;
+                data[i] += tempr;
+                data[i+1] += tempi;
+            }
+            wr = (wtemp = wr) * wpr - wi * wpi + wr;
+            wi = wi * wpr + wtemp * wpi + wi;
+        }
+        mmax = istep;
+    }
+    auto finish = chrono::high_resolution_clock::now();
+    chrono::duration<double> elapsed = finish - start;
+    cout << "Unoptimized timing for optimization 2: " << elapsed.count() << " seconds" << endl;
 }
 
 
