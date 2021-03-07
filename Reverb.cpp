@@ -143,10 +143,15 @@ Wave* readFile(Wave* wave, char *fileName) {
     wave->signal_size = sampleCount;
 
     /* Scaling down signal */
+    cout << "Scaling Data" << endl;
+    auto start = chrono::high_resolution_clock::now();
     for (int i = 0; i < sampleCount; i++) {
         fread(&wave->data[i], 1, wave->bits_per_sample / 8, fp);
         wave->signal[i] = wave->data[i] / (double) 32768.0;
     }
+    auto finish = chrono::high_resolution_clock::now();
+    chrono::duration<double> elapsed = finish - start;
+    cout << "Unoptimized timing for optimization 7 (first part): " << elapsed.count() << " seconds" << endl;
 
     fclose(fp);
     return wave;
@@ -177,8 +182,9 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
     arrLen |= arrLen>>4;
     arrLen |= arrLen>>8;
     arrLen |= arrLen>>16;
-    auto start6 = chrono::high_resolution_clock::now();
-    arrLen = (arrLen + 1) << 1;
+    auto start = chrono::high_resolution_clock::now();
+    int halfArrLen = ++arrLen;
+    arrLen  <<= 1;
 
     /* Initialize arrays to undergo FFT to 0 (sets the imaginary component) */
     auto *input = new double[arrLen] {};
@@ -191,15 +197,14 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
     for (int i = 0; i < M; i++)
         impulse[i*2] = h[i];
 
-    four1(input - 1, arrLen / 2);
-    four1(impulse - 1, arrLen / 2);
+    four1(input - 1, halfArrLen);
+    four1(impulse - 1, halfArrLen);
 
     /* (a,b)*(c,d) = (ac-bd, ad+bc) = (real output, complex output) where:
      *      a is the real component of input
      *      b is the complex component of input
      *      c is the real component of impulse
      *      d is the complex component of input */
-    auto start5 = chrono::high_resolution_clock::now();
     double inReal;
     double inComp;
     double irReal;
@@ -212,20 +217,21 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
         output[i] = inReal * irReal - inComp * irComp;
         output[i+1] = inComp * irReal + inReal * irComp;
     }
-    auto finish5 = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed5 = finish5 - start5;
-    cout << "Optimized timing for optimization 5: " << elapsed5.count() << " seconds" << endl;
 
     /* Performs inverse DFT to get the output values */
-    four1(output - 1, arrLen / 2);
-    auto finish6 = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed6 = finish6 - start6;
-    cout << "Unptimized timing for optimization 6: " << elapsed6.count() << " seconds" << endl;
+    four1(output - 1, halfArrLen);
+    auto finish = chrono::high_resolution_clock::now();
+    chrono::duration<double> elapsed = finish - start;
+    cout << "Optimized timing for optimization 6: " << elapsed.count() << " seconds" << endl;
 
 
     /* Discard any imaginary components */
+    auto start2 = chrono::high_resolution_clock::now();
     for (int i = 0; i < P*2; i+=2)
         y[i/2] = output[i];
+    auto finish2 = chrono::high_resolution_clock::now();
+    chrono::duration<double> elapsed2 = finish2 - start2;
+    cout << "Unoptimized timing for optimization 7 (second part): " << elapsed2.count() << " seconds" << endl;
 
     return y;
 }
