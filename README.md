@@ -4,11 +4,10 @@
 ## What is Convolution Reverb?
 Convolution reverb is used in audio signal processing to simulate reverberations from different environments. By using an impulse response from a specific environment, any audio signal can be transformed to sound as if it was recorded there.
 
-
-Check out the demo files to see this in action.
-Input | Impulse Response | Output
---- | --- | ---
-[Download](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/inputGuitar.wav) | [Download]([https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/impulseTajMahal.wav) | [Download]([https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/output.wav)
+Check out the demo files to see this in action:
+>| Input | Impulse Response | Output |
+>|:-:|:-:|:-:|
+>[Download](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/inputGuitar.wav) | [Download](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/inputGuitar.wav) | [Download](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/output.wav)
 
 ## Usage
 To use the most optimized version:
