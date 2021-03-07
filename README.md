@@ -12,7 +12,7 @@ To use the most optimized version:
 
 ## Features
 * __Reading and writing WAVE files__
-* Performs __convolution reverb__
+* Performs __convolution reverb__ using an input and impulse response
 
 ## Optimizations
 Overall, these optimizations __improved performance by 742,022%__!
