@@ -1,4 +1,4 @@
-# Convolution Reverb Processing 
+# Convolution Reverb Processor 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-C-Plus-Plus.svg)](Reverb.cpp)
 
 ## What is Convolution Reverb?
