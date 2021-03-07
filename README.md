@@ -4,10 +4,8 @@
 ## What is Convolution Reverb?
 Convolution reverb is used in audio signal processing to simulate reverberations from different environments. By using an impulse response from a specific environment, any audio signal can be transformed to sound as if it was recorded there.
 
-## Demo
-Try the the demo files.
 
-[![forthebadge](https://forthebadge.com/images/badges/check-it-out.svg)](./Audio%20Files/)
+Check out the [demo files](./Audio%20Files/) to see this in action.
 
 ## Usage
 To use the most optimized version:
