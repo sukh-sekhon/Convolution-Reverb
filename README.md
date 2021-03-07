@@ -6,9 +6,9 @@ Convolution reverb is used in audio signal processing to simulate reverberations
 
 
 Check out the demo files to see this in action.
-* [Input](./Audio%20Files/inputGuitar.wav)
-* [Impulse Response](./Audio%20Files/inputGuitar.wav)
-* [Output](./Audio%20Files/output.wav)
+Input | Impulse Response | Output
+--- | --- | ---
+[Input](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/inputGuitar.wav) | [Impulse Response]([./Audio%20Files/inputGuitar.wav](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/impulseTajMahal.wav)) | [Output]([./Audio%20Files/output.wav](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/output.wav))
 
 ## Usage
 To use the most optimized version:
