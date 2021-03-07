@@ -34,6 +34,10 @@ typedef struct {
     int     signal_size;
 } Wave ;
 
+/* Cached values from four1 function */
+double* cache = (double *) malloc (1024);
+char cacheType = 0;
+
 /* Function prototypes */
 Wave* readFile(Wave* wave, char *fileName);
 double* convolve(double x[], int N, double h[], int M, double y[], int P);
@@ -66,14 +70,10 @@ int main (int argc, char *argv[]) {
     /* Convolve */
     int outputSize = input->signal_size + impulse->signal_size - 1;
     cout << "Convolving" << endl;
-    auto start = chrono::high_resolution_clock::now();
     double* output = convolve(
             input->signal, input->signal_size,
             impulse->signal, impulse->signal_size,
             output, outputSize);
-    auto finish = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed = finish - start;
-    cout << "Optimized timing for optimization 1: " << elapsed.count() << " seconds" << endl;
 
     cout << "Scaling Data" << endl;
     /* Find maximum absolute output value */
@@ -92,6 +92,7 @@ int main (int argc, char *argv[]) {
     free(input);
     free(impulse);
     free(output);
+    free(cache);
     return 0;
 }
 
@@ -232,12 +233,31 @@ void four1(double data[], int nn, int isign) {
 
     auto start = chrono::high_resolution_clock::now();
     mmax = 2;
+    unsigned short counter = 0;
     while (n > mmax) {
         istep = mmax << 1;
-        theta = isign * (TWO_PI / mmax);
-        wtemp = sin(0.5 * theta);
-        wpr = -2.0 * wtemp * wtemp;
-        wpi = sin(theta);
+
+        /* If running function for first time, calculate values and cache them */
+        if (cacheType == 0) {
+            theta = isign * (TWO_PI / mmax);
+            wtemp = sin(0.5 * theta);
+            wpr = -2.0 * wtemp * wtemp;
+            wpi = sin(theta);
+
+            cache[counter] = wpr;
+            cache[counter + 1] = wpi;
+        }
+        /* If running function with type 2, retrieve from cache */
+        else if(cacheType == 1) {
+            wpr = cache[counter];
+            wpi = cache[counter + 1];
+        }
+        /* If running function with type 3, retrieve from cache and perform small compuatation */
+        else {
+            wpr = cache[counter];
+            wpi = cache[counter + 1] * - 1;
+        }
+
         wr = 1.0;
         wi = 0.0;
         for (m = 1; m < mmax; m += 2) {
@@ -254,10 +274,12 @@ void four1(double data[], int nn, int isign) {
             wi = wi * wpr + wtemp * wpi + wi;
         }
         mmax = istep;
+        counter += 2;
     }
+    cacheType++;
     auto finish = chrono::high_resolution_clock::now();
     chrono::duration<double> elapsed = finish - start;
-    cout << "Unoptimized timing for optimization 2: " << elapsed.count() << " seconds" << endl;
+    cout << "Partially optimized timing for optimization 2: " << elapsed.count() << " seconds" << endl;
 }
 
 
