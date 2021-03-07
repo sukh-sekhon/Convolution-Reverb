@@ -75,15 +75,6 @@ int main (int argc, char *argv[]) {
             impulse->signal, impulse->signal_size,
             output, outputSize);
 
-    cout << "Scaling Data" << endl;
-    /* Find maximum absolute output value */
-    double maxAbsOutput = 0;
-    for (int i = 0; i < outputSize; i ++)
-        if (abs(output[i]) > maxAbsOutput)
-            maxAbsOutput = abs(output[i]);
-    for (int i = 0; i < outputSize; i ++)
-        output[i] /= maxAbsOutput;
-
     /* Write to output file */
     cout << "Writing to " << outputFileName << endl;
     writeFile(outputFileName, output, input->sample_rate, outputSize);
@@ -143,15 +134,10 @@ Wave* readFile(Wave* wave, char *fileName) {
     wave->signal_size = sampleCount;
 
     /* Scaling down signal */
-    cout << "Scaling Data" << endl;
-    auto start = chrono::high_resolution_clock::now();
     for (int i = 0; i < sampleCount; i++) {
         fread(&wave->data[i], 1, wave->bits_per_sample / 8, fp);
         wave->signal[i] = wave->data[i] / (double) 32768.0;
     }
-    auto finish = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed = finish - start;
-    cout << "Unoptimized timing for optimization 7 (first part): " << elapsed.count() << " seconds" << endl;
 
     fclose(fp);
     return wave;
@@ -182,7 +168,6 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
     arrLen |= arrLen>>4;
     arrLen |= arrLen>>8;
     arrLen |= arrLen>>16;
-    auto start = chrono::high_resolution_clock::now();
     int halfArrLen = ++arrLen;
     arrLen  <<= 1;
 
@@ -220,18 +205,20 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
 
     /* Performs inverse DFT to get the output values */
     four1(output - 1, halfArrLen);
+
+    cout << "Scaling Data" << endl;
+    /* Find maximum absolute output value */
+    auto start = chrono::high_resolution_clock::now();
+    double maxAbsOutput = 0;
+    for (int i = 0; i < P*2; i ++)
+        if (abs(output[i]) > maxAbsOutput)
+            maxAbsOutput = abs(output[i]);
+    /* Discard any imaginary components */
+    for (int i = 0; i < P*2; i+=2)
+        y[i/2] = output[i] / maxAbsOutput;
     auto finish = chrono::high_resolution_clock::now();
     chrono::duration<double> elapsed = finish - start;
-    cout << "Optimized timing for optimization 6: " << elapsed.count() << " seconds" << endl;
-
-
-    /* Discard any imaginary components */
-    auto start2 = chrono::high_resolution_clock::now();
-    for (int i = 0; i < P*2; i+=2)
-        y[i/2] = output[i];
-    auto finish2 = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed2 = finish2 - start2;
-    cout << "Unoptimized timing for optimization 7 (second part): " << elapsed2.count() << " seconds" << endl;
+    cout << "Partially optimized timing for optimization 7a: " << elapsed.count() << " seconds" << endl;
 
     return y;
 }
