@@ -42,7 +42,7 @@ char cacheType = 0;
 Wave* readFile(Wave* wave, char *fileName);
 double* convolve(double x[], int N, double h[], int M, double y[], int P);
 void writeFile(char *outputFileName, double *output, int outputSampleRate, int outputLength);
-void four1(double data[], int nn, int isign);
+void four1(double data[], int nn);
 
 /**
  * Convolves input and impulse response .wav files into an output .wav file
@@ -171,7 +171,12 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
     y = (double *) malloc (sizeof(double) * P);
 
     /* Size of padded array ((value^2)*2 s.t. value = max(N, M))*/
+    auto start = chrono::high_resolution_clock::now();
     int arrayLength = pow(2, ceil(log(max(N, M))/log(2))) * 2;
+    auto finish = chrono::high_resolution_clock::now();
+    chrono::duration<double> elapsed = finish - start;
+    cout << "Unoptimized timing for optimization 3: " << elapsed.count() << " seconds" << endl;
+
 
     /* Initialize arrays to undergo FFT to 0 (sets the imaginary component) */
     auto *input = new double[arrayLength] {};
@@ -184,8 +189,8 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
     for (int i = 0; i < M; i++)
         impulse[i*2] = h[i];
 
-    four1(input - 1, arrayLength / 2, 1);
-    four1(impulse - 1, arrayLength / 2, 1);
+    four1(input - 1, arrayLength / 2);
+    four1(impulse - 1, arrayLength / 2);
 
     /* (a,b)*(c,d) = (ac-bd, ad+bc) = (real output, complex output) where:
      *      a is the real component of input
@@ -198,7 +203,7 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
     }
 
     /* Performs inverse DFT to get the output values */
-    four1(output - 1, arrayLength / 2, -1);
+    four1(output - 1, arrayLength / 2);
 
     /* Discard any imaginary components */
     for (int i = 0; i < P*2; i+=2)
@@ -210,7 +215,7 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
 /**
  * Adopted from Numerical Recipes in C: The Art of Scientific Computing (pages 507,508)
  */
-void four1(double data[], int nn, int isign) {
+void four1(double data[], int nn) {
     unsigned long n, mmax, m, j, istep, i;
     double wtemp, wr, wpr, wpi, wi, theta;
     double tempr, tempi;
@@ -239,7 +244,7 @@ void four1(double data[], int nn, int isign) {
 
         /* If running function for first time, calculate values and cache them */
         if (cacheType == 0) {
-            theta = isign * (TWO_PI / mmax);
+            theta = TWO_PI / mmax;
             wtemp = sin(0.5 * theta);
             wpr = -2.0 * wtemp * wtemp;
             wpi = sin(theta);
@@ -279,7 +284,7 @@ void four1(double data[], int nn, int isign) {
     cacheType++;
     auto finish = chrono::high_resolution_clock::now();
     chrono::duration<double> elapsed = finish - start;
-    cout << "Partially optimized timing for optimization 2: " << elapsed.count() << " seconds" << endl;
+    cout << "Optimized timing for optimization 2: " << elapsed.count() << " seconds" << endl;
 }
 
 
