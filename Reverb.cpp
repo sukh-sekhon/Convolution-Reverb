@@ -171,7 +171,6 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
     y = (double *) malloc (sizeof(double) * P);
 
     /* Size of padded array ((value^2)*2 s.t. value = max(N, M))*/
-    auto start = chrono::high_resolution_clock::now();
     unsigned int arrLen = max(N, M) - 1;
     arrLen |= arrLen>>1;
     arrLen |= arrLen>>2;
@@ -179,10 +178,6 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
     arrLen |= arrLen>>8;
     arrLen |= arrLen>>16;
     arrLen = (arrLen + 1) << 1;
-    auto finish = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed = finish - start;
-    cout << "Optimized timing for optimization 3: " << elapsed.count() << " seconds" << endl;
-
 
     /* Initialize arrays to undergo FFT to 0 (sets the imaginary component) */
     auto *input = new double[arrLen] {};
@@ -203,10 +198,15 @@ double* convolve(double* x, int N, double* h, int M, double* y, int P) {
      *      b is the complex component of input
      *      c is the real component of impulse
      *      d is the complex component of input */
+    auto start = chrono::high_resolution_clock::now();
     for (int i = 0; i < arrLen; i+=2) {
         output[i] = input[i] * impulse[i] - input[i+1] * impulse[i+1];
         output[i+1] = input[i+1] * impulse[i] + input[i] * impulse[i+1];
     }
+    auto finish = chrono::high_resolution_clock::now();
+    chrono::duration<double> elapsed = finish - start;
+    cout << "Unoptimized timing for optimization 5: " << elapsed.count() << " seconds" << endl;
+
 
     /* Performs inverse DFT to get the output values */
     four1(output - 1, arrLen / 2);
@@ -271,8 +271,19 @@ void four1(double data[], int nn) {
 
         wr = 1.0;
         wi = 0.0;
-        for (m = 1; m < mmax; m += 2) {
+        for (m = 1; m < mmax - 1; m += 2) {
             for (i = m; i <= n; i += istep) {
+                j = i + mmax;
+                tempr = wr * data[j] - wi * data[j+1];
+                tempi = wr * data[j+1] + wi * data[j];
+                data[j] = data[i] - tempr;
+                data[j+1] = data[i+1] - tempi;
+                data[i] += tempr;
+                data[i+1] += tempi;
+            }
+            wr = (wtemp = wr) * wpr - wi * wpi + wr;
+            wi = wi * wpr + wtemp * wpi + wi;
+            for (i = (m+=2); i <= n; i += istep) {
                 j = i + mmax;
                 tempr = wr * data[j] - wi * data[j+1];
                 tempi = wr * data[j+1] + wi * data[j];
@@ -289,8 +300,7 @@ void four1(double data[], int nn) {
     }
     auto finish = chrono::high_resolution_clock::now();
     chrono::duration<double> elapsed = finish - start;
-    cout << "Unoptimized timing for optimization 4: " << elapsed.count() << " seconds" << endl;
-
+    cout << "Optimized timing for optimization 4: " << elapsed.count() << " seconds" << endl;
     cacheType++;
 }
 
