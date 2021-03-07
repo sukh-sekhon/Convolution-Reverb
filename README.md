@@ -5,7 +5,10 @@
 Convolution reverb is used in audio signal processing to simulate reverberations from different environments. By using an impulse response from a specific environment, any audio signal can be transformed to sound as if it was recorded there.
 
 
-Check out the [demo files](./Audio%20Files/) to see this in action.
+Check out the demo files to see this in action.
+* [Input](./Audio%20Files/inputGuitar.wav)
+* [Impulse Response](./Audio%20Files/inputGuitar.wav)
+* [Output](./Audio%20Files/output.wav)
 
 ## Usage
 To use the most optimized version:
