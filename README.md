@@ -9,16 +9,15 @@ Play these sample files to see this in action:
 
 [![forthebadge](https://img.shields.io/badge/input-gainsboro?style=for-the-badge&logo=asciinema&logoColor=red)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/inputGuitar.wav) [![forthebadge](https://img.shields.io/badge/impulse%20response-gainsboro?style=for-the-badge&logo=asciinema&logoColor=red)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/impulseTajMahal.wav) [![forthebadge](https://img.shields.io/badge/output-red?style=for-the-badge&logo=asciinema&logoColor=white)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/impulseTajMahal.wav)
 
+## Features
+* __Reading and writing WAVE files__
+* Performing __Convolution Reverb__
 
 ## Usage
 To use the most optimized version:
 1. Clone the repo `git clone https://github.com/sukhjot-sekhon/Convolution-Reverb`
 2. Compile the file with compiler-level optimizations `gcc -Ofast Reverb.cpp -o Reverb`
 3. Run the program with input and impulse response WAVE files `Reverb input.wav impulse.wav output.wav`
-  
-## Features
-* __Reading and writing WAVE files__
-* Performing __Convolution Reverb__
   
 ## Optimizations
 My initial version of this tool was very slow, with some optimizations, performance was improved by **742,022%**
