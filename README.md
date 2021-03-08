@@ -7,7 +7,7 @@ Convolution reverb is used in audio signal processing to simulate reverberations
 ## Demo
 Play these sample files to see this in action:
 
-[![forthebadge](https://img.shields.io/badge/input-gainsboro?style=for-the-badge&logo=asciinema&logoColor=red)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/inputGuitar.wav) [![forthebadge](https://img.shields.io/badge/impulse%20response-gainsboro?style=for-the-badge&logo=asciinema&logoColor=red)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/impulseTajMahal.wav) [![forthebadge](https://img.shields.io/badge/output-red?style=for-the-badge&logo=asciinema&logoColor=white)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/impulseTajMahal.wav)
+[![forthebadge](https://img.shields.io/badge/input-gainsboro?style=for-the-badge&logo=asciinema&logoColor=red)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/inputGuitar.wav) [![forthebadge](https://img.shields.io/badge/impulse%20response-gainsboro?style=for-the-badge&logo=asciinema&logoColor=red)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/impulseTajMahal.wav) [![forthebadge](https://img.shields.io/badge/output-red?style=for-the-badge&logo=asciinema&logoColor=white)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/output.wav)
 
 ## Features
 * __Reading and writing WAVE files__
