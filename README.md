@@ -6,9 +6,11 @@ Convolution reverb is used in audio signal processing to simulate reverberations
 
 Play these demo files to see this in action:
 
-[![forthebadge](https://img.shields.io/badge/input-gainsboro?style=for-the-badge&logo=asciinema&logoColor=red)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/inputGuitar.wav) <a href="#"><img src="https://user-images.githubusercontent.com/50682117/110273920-e0e12d00-7f8a-11eb-8d9e-444c98b756d3.png" alt="plus" height="20px"/></a> [![forthebadge](https://img.shields.io/badge/impulse%20response-gainsboro?style=for-the-badge&logo=asciinema&logoColor=red)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/impulseTajMahal.wav)<label style="font-size:2em; margin: 10px; vertical-align: bottom;">➡</label>[![forthebadge](https://img.shields.io/badge/output-red?style=for-the-badge&logo=asciinema&logoColor=white)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/impulseTajMahal.wav)
+[![forthebadge](https://img.shields.io/badge/input-gainsboro?style=for-the-badge&logo=asciinema&logoColor=red)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/inputGuitar.wav) <a href="#"><img src="https://user-images.githubusercontent.com/50682117/110275064-8dbca980-7f8d-11eb-8b5d-889fb8c70516.png" alt="plus" height="20px"/></a> [![forthebadge](https://img.shields.io/badge/impulse%20response-gainsboro?style=for-the-badge&logo=asciinema&logoColor=red)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/impulseTajMahal.wav)<a href="#"><img src="https://user-images.githubusercontent.com/50682117/110275126-b04ec280-7f8d-11eb-9666-760e321cb4da.png" alt="arrow" height="20px"/></a>[![forthebadge](https://img.shields.io/badge/output-red?style=for-the-badge&logo=asciinema&logoColor=white)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/impulseTajMahal.wav)
+![image]()
 
 
+![image]()
 
 ## Usage
 To use the most optimized version:
