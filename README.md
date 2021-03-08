@@ -4,13 +4,10 @@
 ## What is Convolution Reverb?
 Convolution reverb is used in audio signal processing to simulate reverberations from different environments. By using an impulse response from a specific environment, any audio signal can be transformed to sound as if it was recorded there.
 
-Play these demo files to see this in action:
+## Demo
+Play these sample files to see this in action:
 
 [![forthebadge](https://img.shields.io/badge/input-gainsboro?style=for-the-badge&logo=asciinema&logoColor=red)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/inputGuitar.wav) <a href="#"><img src="https://user-images.githubusercontent.com/50682117/110275064-8dbca980-7f8d-11eb-8b5d-889fb8c70516.png" alt="plus" height="20px"/></a> [![forthebadge](https://img.shields.io/badge/impulse%20response-gainsboro?style=for-the-badge&logo=asciinema&logoColor=red)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/impulseTajMahal.wav)<a href="#"><img src="https://user-images.githubusercontent.com/50682117/110275126-b04ec280-7f8d-11eb-9666-760e321cb4da.png" alt="arrow" height="20px"/></a>[![forthebadge](https://img.shields.io/badge/output-red?style=for-the-badge&logo=asciinema&logoColor=white)](https://github.com/sukhjot-sekhon/Convolution-Reverb/raw/master/Audio%20Files/impulseTajMahal.wav)
-![image]()
-
-
-![image]()
 
 ## Usage
 To use the most optimized version:
