@@ -15,7 +15,7 @@ Play these sample files to see this in action:
 
 ## Usage
 To use the most optimized version:
-1. Clone the repo `git clone https://github.com/sukhjot-sekhon/Convolution-Reverb`
+1. Clone the repo `git clone https://github.com/sukh-sekhon/Convolution-Reverb`
 2. Compile the file with compiler-level optimizations `gcc -Ofast Reverb.cpp -o Reverb`
 3. Run the program with input and impulse response WAVE files `Reverb input.wav impulse.wav output.wav`
   
